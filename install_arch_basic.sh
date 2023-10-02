@@ -95,7 +95,7 @@ echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
 
 
 # Install and configure bootloader (Grub in this example)
-pacman -S grub efibootmgr
+# pacman -S grub efibootmgr
 grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=arch
 grub-mkconfig -o /boot/grub/grub.cfg
 
