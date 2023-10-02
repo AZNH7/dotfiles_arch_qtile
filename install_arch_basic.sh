@@ -57,6 +57,7 @@ echo "$HOSTNAME" > /etc/hostname
 # 127.0.0.1  localhost
 # ::1        localhost
 # 127.0.1.1  $HOSTNAME.localdomain  $HOSTNAME
+EOF
 
 # Set the root password
 # passwd
@@ -78,7 +79,7 @@ echo "$USERNAME:$password1" | chpasswd
 
 # Allow wheel group to execute sudo
 echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
-EOF
+
 
 # Install and configure bootloader (Grub in this example)
 pacman -S grub efibootmgr
