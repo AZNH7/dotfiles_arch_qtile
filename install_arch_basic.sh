@@ -3,9 +3,9 @@
 set -e  # Exit immediately if any command fails
 
 # Define variables
-BOOT_PARTITION="/dev/sda1"
-ROOT_PARTITION="/dev/sda2"
-HOME_PARTITION="/dev/sda3"
+BOOT_PARTITION="/dev/vda1"
+ROOT_PARTITION="/dev/vda2"
+HOME_PARTITION="/dev/vda3"
 TIMEZONE="Europe/Berlin"
 # HOSTNAME="your_hostname"
 # USERNAME="your_username"
