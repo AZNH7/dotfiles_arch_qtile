@@ -11,7 +11,7 @@ BOOT_PARTITION="/dev/vda1"
 ROOT_PARTITION="/dev/vda2"
 HOME_PARTITION="/dev/vda3"
 TIMEZONE="Europe/Berlin"
-# read -p "what is your hostname? " HOSTNAME
+read -p "what is your hostname? " HOSTNAME
 # read -p "Your username? " USERNAME
 
 # Partition and format the disk (Assuming /dev/vda for simplicity)
@@ -47,12 +47,12 @@ genfstab -U /mnt >> /mnt/etc/fstab | tee -a $LOG_FILE
 # Change root into the new system
 arch-chroot /mnt 
 # Set the timezone
-echo "Changing root into the new system..." | tee -a $LOG_FILE
-arch-chroot /mnt <<EOF | tee -a $LOG_FILE
-# Set the timezone
-echo "Setting timezone..." | tee -a $LOG_FILE
-ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime | tee -a $LOG_FILE
-EOF
+# echo "Changing root into the new system..." | tee -a $LOG_FILE
+# arch-chroot /mnt <<EOF | tee -a $LOG_FILE
+# # Set the timezone
+# echo "Setting timezone..." | tee -a $LOG_FILE
+# ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime | tee -a $LOG_FILE
+# EOF
 
 # Uncomment the desired locale(s) in /etc/locale.gen
 # Generate the locales
