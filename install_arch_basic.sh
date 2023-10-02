@@ -3,7 +3,7 @@
 set -e  # Exit immediately if any command fails
 
 # Unmount all mounted partitions before starting just in case
-umount -A --recursive /mnt
+# umount -A --recursive /mnt
 
 
 # Define variables
