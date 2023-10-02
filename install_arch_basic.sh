@@ -64,6 +64,7 @@ echo "$HOSTNAME" > /etc/hostname
 # Create a new user
 useradd -m -G wheel $USERNAME
 passwd $USERNAME
+echo $USERNAME
 
 # Allow wheel group to execute sudo
 echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
