@@ -2,13 +2,17 @@
 
 set -e  # Exit immediately if any command fails
 
+# Unmount all mounted partitions before starting just in case
+umount -A --recursive /mnt
+
+
 # Define variables
 BOOT_PARTITION="/dev/vda1"
 ROOT_PARTITION="/dev/vda2"
 HOME_PARTITION="/dev/vda3"
 TIMEZONE="Europe/Berlin"
-read -p "what is your hostname? " HOSTNAME
-read -p "Your username? " USERNAME
+# read -p "what is your hostname? " HOSTNAME
+# read -p "Your username? " USERNAME
 
 # Partition and format the disk (Assuming /dev/vda for simplicity)
 echo "Partitioning and formatting the disk..."
@@ -59,23 +63,32 @@ echo "$HOSTNAME" > /etc/hostname
 # 127.0.1.1  $HOSTNAME.localdomain  $HOSTNAME
 EOF
 
-# Set the root password
-# passwd
-
 # Create a new user
 useradd -m -G wheel $USERNAME
-while true; do
-    read -s -p "Enter password for $USERNAME: " password1
-    echo
-    read -s -p "Retype password for $USERNAME: " password2
-    echo
-    if [ "$password1" = "$password2" ]; then
-        break
+set_password() {
+    read -rs -p "Please enter password: " PASSWORD1
+    echo -ne "\n"
+    read -rs -p "Please re-enter password: " PASSWORD2
+    echo -ne "\n"
+    if [[ "$PASSWORD1" == "$PASSWORD2" ]]; then
+        set_option "$1" "$PASSWORD1"
     else
-        echo "Passwords do not match. Please try again."
+        echo -ne "ERROR! Passwords do not match. \n"
+        set_password
     fi
-done
-echo "$USERNAME:$password1" | chpasswd
+}
+
+userinfo () {
+read -p "Please enter your username: " username
+set_option USERNAME ${username,,} # convert to lower case
+set_password "PASSWORD"
+read -rep "Please enter your hostname: " nameofmachine
+set_option NAME_OF_MACHINE $nameofmachine
+}
+
+# call the function
+set_password
+userinfo
 
 # Allow wheel group to execute sudo
 echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
@@ -102,6 +115,26 @@ systemctl enable NetworkManager
 
 # move configs folders to the config local folder
 cp -R .config/* /home/$USERNAME/.config/ 
+
+# enable some services 
+systemctl enable cups.service
+echo "  Cups enabled"
+ntpd -qg
+systemctl enable ntpd.service
+echo "  NTP enabled"
+systemctl disable dhcpcd.service
+echo "  DHCP disabled"
+systemctl stop dhcpcd.service
+echo "  DHCP stopped"
+systemctl enable NetworkManager.service
+echo "  NetworkManager enabled"
+systemctl enable bluetooth
+echo "  Bluetooth enabled"
+systemctl enable avahi-daemon.service
+echo "  Avahi enabled"
+systemctl enable bluetooth.service
+echo "  Bluetooth enabled"
+
 
 # Exit the chroot environment
 exit
