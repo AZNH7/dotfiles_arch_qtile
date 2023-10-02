@@ -59,7 +59,7 @@ echo "$HOSTNAME" > /etc/hostname
 # 127.0.1.1  $HOSTNAME.localdomain  $HOSTNAME
 
 # Set the root password
-passwd
+# passwd
 
 # Create a new user
 useradd -m -G wheel $USERNAME
