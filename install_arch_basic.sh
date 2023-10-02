@@ -7,11 +7,18 @@ BOOT_PARTITION="/dev/vda1"
 ROOT_PARTITION="/dev/vda2"
 HOME_PARTITION="/dev/vda3"
 TIMEZONE="Europe/Berlin"
-# HOSTNAME="your_hostname"
-# USERNAME="your_username"
 read -p "what is your hostname? " HOSTNAME
 read -p "Your username? " USERNAME
 
+# Partition and format the disk (Assuming /dev/vda for simplicity)
+echo "Partitioning and formatting the disk..."
+(
+  echo o; echo n; echo p; echo 1; echo ""; echo +512M;  # EFI partition
+  echo n; echo p; echo 2; echo ""; echo +20G;          # Root partition
+  echo n; echo p; echo 3; echo ""; echo "";            # Home partition
+  echo t; echo 1; echo 1;                               # Set type for EFI
+  echo w
+) | fdisk /dev/vda
 
 # Create file systems
 mkfs.fat -F32 $BOOT_PARTITION
