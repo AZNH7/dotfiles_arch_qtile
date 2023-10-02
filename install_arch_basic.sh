@@ -63,8 +63,18 @@ echo "$HOSTNAME" > /etc/hostname
 
 # Create a new user
 useradd -m -G wheel $USERNAME
-passwd $USERNAME
-echo $USERNAME
+while true; do
+    read -s -p "Enter password for $USERNAME: " password1
+    echo
+    read -s -p "Retype password for $USERNAME: " password2
+    echo
+    if [ "$password1" = "$password2" ]; then
+        break
+    else
+        echo "Passwords do not match. Please try again."
+    fi
+done
+echo "$USERNAME:$password1" | chpasswd
 
 # Allow wheel group to execute sudo
 echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
@@ -83,8 +93,8 @@ git clone https://aur.archlinux.org/paru.git
 cd paru
 makepkg -si
 
-# Install Firefox, Zoom, Steam, and Slack (you can add more packages)
-paru -S firefox zoom steam slack-desktop rofi kitty 
+# Install Firefox, Zoom, Steam, and other apps
+paru -S firefox zoom steam slack-desktop rofi kitty dmenu
 
 # Enable services (e.g., for NetworkManager)
 systemctl enable NetworkManager
