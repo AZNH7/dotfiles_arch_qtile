@@ -44,14 +44,14 @@ pacstrap /mnt base base-devel linux linux-firmware
 genfstab -U /mnt >> /mnt/etc/fstab
 
 # Change root into the new system
-arch-chroot /mnt <<EOF
+arch-chroot /mnt 
 # Set the timezone
 ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
 hwclock --systohc
 
 # Uncomment the desired locale(s) in /etc/locale.gen
 # Generate the locales
-locale-gen
+# locale-gen
 
 # Set the hostname
 echo "$HOSTNAME" > /etc/hostname
@@ -61,7 +61,7 @@ echo "$HOSTNAME" > /etc/hostname
 # 127.0.0.1  localhost
 # ::1        localhost
 # 127.0.1.1  $HOSTNAME.localdomain  $HOSTNAME
-EOF
+
 
 # Create a new user
 useradd -m -G wheel $USERNAME
